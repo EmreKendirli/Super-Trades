@@ -68,6 +68,8 @@ const userDelete = tryCatch (async (req, res) => {
 })
 const userUpdate = tryCatch (async (req, res) => {
     const userId = req.params.id
+    const date = new Date()
+    req.body.updatedAt = date
     const [updatedRowCount] = await User.update(req.body, {
         where: {
             id: userId,
