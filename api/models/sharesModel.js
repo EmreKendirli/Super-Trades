@@ -1,6 +1,7 @@
+import TradeHistory from './tradeHistoryModel.js';
+
 import { Sequelize, DataTypes } from 'sequelize';
 import db from '../config/database.js';
-
 const Shares = db.define('shares', {
   name: {
     type: DataTypes.STRING(3), // 3 büyük harfle sembol
@@ -19,5 +20,7 @@ const Shares = db.define('shares', {
   },
   
 });
+
+
 
 export default Shares;

@@ -33,4 +33,8 @@ const TradeHistory = db.define('trade_histories', {
   },
 });
 
+
+TradeHistory.Share = TradeHistory.belongsTo(Shares, { foreignKey: 'shares_id' });
+TradeHistory.User = TradeHistory.belongsTo(Users, { foreignKey: 'user_id' });
+
 export default TradeHistory;

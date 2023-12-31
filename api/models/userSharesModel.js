@@ -1,7 +1,8 @@
 import { Sequelize, DataTypes } from 'sequelize';
+import Shares from './sharesModel.js';
 import db from '../config/database.js';
 import Users from "./userModel.js"
-import Shares from './sharesModel.js';
+
 
 const UserShares = db.define('user_shares', {
   user_id: {
@@ -15,15 +16,13 @@ const UserShares = db.define('user_shares', {
   shares_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: {
-      model: Shares,
-      key: 'id',
-    },
+
   },
   quantity: {
     type: DataTypes.INTEGER,
     allowNull: false,
   }
 });
-
+UserShares.Share = UserShares.belongsTo(Shares, { foreignKey: 'shares_id' });
+UserShares.User = UserShares.belongsTo(Users, { foreignKey: 'user_id' });
 export default UserShares ;

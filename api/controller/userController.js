@@ -5,6 +5,10 @@ import axios from "axios";
 import xml2js from "xml2js";
 import tryCatch from "../utils/tryCatch.js"
 import AppError from "../utils/appError.js";
+import TradeHistory from "../models/tradeHistoryModel.js";
+import Shares from "../models/sharesModel.js";
+import UserShares from "../models/userSharesModel.js";
+import { Sequelize } from 'sequelize';
 
 const userFindAll = tryCatch (async (req, res) => {
     const data = await User.findAll({
@@ -181,6 +185,54 @@ const userLogin = tryCatch (async (req, res) => {
     }
     
 });
+
+//kullanıcının alım satım geçmişi getirilir
+const getTradeHistory = tryCatch(async (req,res)=>{
+    const userId = req.user.id
+    const data = await TradeHistory.findAll({
+        where:{
+            user_id:userId
+        },
+        include: Shares,
+    })
+    if (!data) {
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+    }
+
+    res.status(200).json({
+        succeded:true,
+        data:{
+            data,
+            message:"Başarılı şekilde listelendi"
+        }
+    })
+})
+//kullanıcının elindeki hisseleri getirir
+const getUserShares = tryCatch (async (req,res)=>{
+    const userId = req.user.id
+    const data = await UserShares.findAll({
+        where:{
+            user_id:userId,
+            quantity: {
+                [Sequelize.Op.gt]: 0, // Op.gt, "greater than" anlamına gelir
+              },
+        },
+        include: Shares,
+    })
+    if (!data) {
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+    }
+
+    res.status(200).json({
+        succeded:true,
+        data:{
+            data,
+            message:"Başarılı şekilde listelendi"
+        }
+    })
+})
+
+
 const createToken = async (id) => {
     return jwt.sign(
         {
@@ -230,7 +282,9 @@ const UserController = {
     userLogin,
     bringAUser,
     userDelete,
-    userUpdate
+    userUpdate,
+    getTradeHistory,
+    getUserShares
 }
 
 export default UserController
