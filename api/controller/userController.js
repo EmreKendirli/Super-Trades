@@ -68,8 +68,7 @@ const userDelete = tryCatch (async (req, res) => {
 })
 const userUpdate = tryCatch (async (req, res) => {
     const userId = req.params.id
-    const date = new Date()
-    req.body.updatedAt = date
+
     const [updatedRowCount] = await User.update(req.body, {
         where: {
             id: userId,
@@ -112,9 +111,8 @@ const userRegister = tryCatch (async (req, res) => {
         });
     }
 
-    const date = new Date()
 
-    const data = await User.create({ firstName, lastName, email, password, identityNumber, birthYear, createdAt: date, updatedAt: date })
+    const data = await User.create({ firstName, lastName, email, password, identityNumber, birthYear })
    
     if (!data) {
         throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 

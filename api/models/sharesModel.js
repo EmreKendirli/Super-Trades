@@ -17,6 +17,7 @@ const Shares = db.define('shares', {
   availableShares: {
     type: DataTypes.INTEGER,
   },
+  
 });
 
 export default Shares;

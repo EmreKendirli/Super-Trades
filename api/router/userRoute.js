@@ -1,6 +1,7 @@
 import express  from "express";
 import UserController from "../controller/userController.js";
 import UserValidate from "../validations/userValidate.js"
+
 const router = express.Router()
 
 router.route("/").get(UserController.userFindAll)

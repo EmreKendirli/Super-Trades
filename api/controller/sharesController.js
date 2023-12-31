@@ -3,12 +3,11 @@ import AppError from "../utils/appError.js";
 import Shares from "../models/sharesModel.js";
 
 const addShares = tryCatch(async (req, res) => {
-    const { name, description, price, totalSupply } = req.body
-    console.log(req.body);
-    const date = new Date()
+    let { name, description, price, totalSupply } = req.body
+    name = name.toUpperCase()
     const numericPrice = price.toFixed(2);
     console.log(numericPrice);
-    const data = await Shares.create({ name, description, price: numericPrice, createdAt: date, updatedAt: date, totalSupply, availableShares: totalSupply })
+    const data = await Shares.create({ name, description, price: numericPrice,  totalSupply, availableShares: totalSupply })
 
     res.status(200).json({
         succeded: true,
@@ -77,11 +76,9 @@ const sharesDelete = tryCatch(async (req, res) => {
 })
 const sharesPriceUpdate = tryCatch(async (req, res) => {
     const id = req.params.id
-    const date = new Date()
     const { price } = req.body
     const [updatedRowCount] = await Shares.update({
         price,
-        updatedAt: date
     }, {
         where: {
             id: id,
