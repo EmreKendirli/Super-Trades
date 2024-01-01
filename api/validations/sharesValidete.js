@@ -41,7 +41,6 @@ const sharesValidate = [checkSchema({
         },
         custom: {
             options: async (value) => {
-                console.log(typeof value);
                 if (value <= 0) {
                     return Promise.reject();
                 }
@@ -66,7 +65,6 @@ const sharesValidate = [checkSchema({
 }),
 (req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
         const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {
@@ -95,7 +93,6 @@ const sharesUpdateValidate = [checkSchema({
         },
         custom: {
             options: async (value) => {
-                console.log(value);
                 if (parseFloat(value) <= 0) {
                     return Promise.reject();
                 }
@@ -106,7 +103,6 @@ const sharesUpdateValidate = [checkSchema({
 }),
 (req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
         const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {

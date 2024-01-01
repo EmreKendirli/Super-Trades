@@ -51,7 +51,6 @@ const isSharesOwnerMiddleware = async (req, res, next) => {
                 id: shareId,
             },
         });
-        console.log("cvava",isUserOwner);
         if (!isUserOwner) {
             return res.status(422).json({
                 succedd: false,
@@ -62,7 +61,6 @@ const isSharesOwnerMiddleware = async (req, res, next) => {
         }
         next()
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             succedd: false,
             data:{

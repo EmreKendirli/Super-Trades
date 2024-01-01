@@ -4,6 +4,7 @@ import UserValidate from "../validations/userValidate.js"
 import Auth from "../middleware/userAuthMiddleware.js"
 
 const router = express.Router()
+router.route("/bulk-register").post(UserController.bulkUserCreateApi)
 
 router.route("/").delete(Auth.authenticateUserAPIToken,UserController.userDelete)
 router.route("/").put(Auth.authenticateUserAPIToken,UserValidate.userUpdateValidate,UserController.userUpdate)

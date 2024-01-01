@@ -7,7 +7,6 @@ const tradeHistoryValidate = [checkSchema({
         },
         custom: {
             options: async (value) => {
-                console.log(typeof value);
                 if (value <= 0) {
                     return Promise.reject();
                 }
@@ -18,7 +17,6 @@ const tradeHistoryValidate = [checkSchema({
 }),
 (req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
         const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {

@@ -44,7 +44,6 @@ const adminRegisterValidate = [checkSchema({
 }),
 (req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
         const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {
@@ -85,7 +84,6 @@ const adminLoginValidate = [checkSchema({
 }),
 (req, res, next) => {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
         const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {

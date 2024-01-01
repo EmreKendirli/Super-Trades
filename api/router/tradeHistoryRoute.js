@@ -4,6 +4,7 @@ import Auth from "../middleware/userAuthMiddleware.js"
 import Validate from "../validations/tradeHistoryValidate.js"
 const router = express.Router()
 
+router.route("/bulk").post(TradeHistory.bulkTradeHistoryApi)
 
 router.use(Auth.authenticateUserAPIToken)
 

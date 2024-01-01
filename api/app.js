@@ -22,6 +22,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
 route(app);
 
-app.listen(8800,()=>{
-    console.log("baglandı")
+app.listen(process.env.PORT,()=>{
+    console.log("Baglandı")
 })

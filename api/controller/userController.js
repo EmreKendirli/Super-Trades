@@ -10,22 +10,22 @@ import Shares from "../models/sharesModel.js";
 import UserShares from "../models/userSharesModel.js";
 import { Sequelize } from 'sequelize';
 
-const userFindAll = tryCatch (async (req, res) => {
+const userFindAll = tryCatch(async (req, res) => {
     const data = await User.findAll({
         attributes: { exclude: ['password'] },
     })
     if (!data) {
-        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.", 404)
     }
     res.status(200).json({
         succeded: true,
-        data:{
+        data: {
             data,
-            message:"Kullanıcılar listelendi."
+            message: "Kullanıcılar listelendi."
         }
     })
 })
-const bringAUser = tryCatch (async (req, res) => {
+const bringAUser = tryCatch(async (req, res) => {
     const userId = req.params.id
     const user = await User.findOne({
         where: {
@@ -34,17 +34,17 @@ const bringAUser = tryCatch (async (req, res) => {
         attributes: { exclude: ['password'] }, // Şifre alanını hariç tut
     });
     if (!user) {
-        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.", 404)
     }
     res.status(200).json({
         succeded: true,
-        data:{
-            data:user,
-            message:"Kullanıcı listelendi."
-        } 
+        data: {
+            data: user,
+            message: "Kullanıcı listelendi."
+        }
     })
 })
-const userDelete = tryCatch (async (req, res) => {
+const userDelete = tryCatch(async (req, res) => {
     const userId = req.user.id
     const deletedUserCount = await User.destroy({
         where: {
@@ -70,7 +70,7 @@ const userDelete = tryCatch (async (req, res) => {
         console.log('Belirtilen id\'ye sahip kullanıcı bulunamadı.');
     }
 })
-const userUpdate = tryCatch (async (req, res) => {
+const userUpdate = tryCatch(async (req, res) => {
     const userId = req.user.id
 
     const [updatedRowCount] = await User.update(req.body, {
@@ -97,7 +97,7 @@ const userUpdate = tryCatch (async (req, res) => {
         console.log('Belirtilen id\'ye sahip kullanıcı bulunamadı.');
     }
 })
-const userRegister = tryCatch (async (req, res) => {
+const userRegister = tryCatch(async (req, res) => {
     const { firstName, lastName, email, password, identityNumber, birthYear } = req.body
 
     const isValid = await identityNumberVerification(
@@ -117,19 +117,19 @@ const userRegister = tryCatch (async (req, res) => {
 
 
     const data = await User.create({ firstName, lastName, email, password, identityNumber, birthYear })
-   
+
     if (!data) {
-        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.", 404)
     }
 
     res.status(200).json({
         succeded: true,
-        data:{
+        data: {
             message: "Kullanıcı Başarılı Şekilde Kayıt Oldu"
         }
     })
 })
-const userLogin = tryCatch (async (req, res) => {
+const userLogin = tryCatch(async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({
         where: {
@@ -143,7 +143,7 @@ const userLogin = tryCatch (async (req, res) => {
     } else {
         res.status(404).json({
             succeded: false,
-            data:{
+            data: {
                 message: "Kullanıcı Bulunamadı"
             }
         })
@@ -155,12 +155,11 @@ const userLogin = tryCatch (async (req, res) => {
         if (!token) {
             res.status(404).json({
                 succeded: false,
-                data:{
+                data: {
                     message: "Token Oluşturulamadı."
                 }
             })
         }
-        console.log(token);
         const users = await User.findOne({
             where: {
                 email: email,
@@ -172,7 +171,7 @@ const userLogin = tryCatch (async (req, res) => {
             data: {
                 token,
                 user: users,
-                message:"Giriş Başarılı."
+                message: "Giriş Başarılı."
             },
         });
     } else {
@@ -183,13 +182,13 @@ const userLogin = tryCatch (async (req, res) => {
             },
         });
     }
-    
+
 });
-const userPasswordUpdate = tryCatch(async(req,res)=>{
+const userPasswordUpdate = tryCatch(async (req, res) => {
     const id = req.user.id
     const user = await User.findOne({
-        where:{
-            id:id
+        where: {
+            id: id
         }
     });
     let same = false
@@ -206,7 +205,7 @@ const userPasswordUpdate = tryCatch(async(req,res)=>{
 
         res.status(200).json({
             succeded: true,
-            data:{
+            data: {
                 message: 'Şifreniz başarılı bir şekilde değiştirildi.'
             }
         })
@@ -214,7 +213,7 @@ const userPasswordUpdate = tryCatch(async(req,res)=>{
 
         res.status(422).json({
             succeded: false,
-            data:{
+            data: {
                 message: 'Mevcut şifrenizi kontrol ediniz'
             }
         })
@@ -226,67 +225,99 @@ async function hashpassword(password) {
     return hashedPassword
 }
 //kullanıcının alım satım geçmişi getirilir
-const getTradeHistory = tryCatch(async (req,res)=>{
+const getTradeHistory = tryCatch(async (req, res) => {
     const userId = req.user.id
     const data = await TradeHistory.findAll({
-        where:{
-            user_id:userId
+        where: {
+            user_id: userId
         },
         include: Shares,
     })
     if (!data) {
-        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.", 404)
+    }
+    let result = []
+    for (const i of data) {
+        let obj = {}
+        obj.id = i.id
+        obj.shares_id = i.shares_id
+        obj.shares_name = i.share.name
+        obj.shares_description = i.share.description
+        obj.shares_price = i.share.price
+        obj.shares_totalSupply = i.share.totalSupply
+        obj.shares_availableShares = i.share.availableShares
+        obj.quantity = i.quantity
+        obj.type = i.type
+        obj.quantity = i.quantity
+        obj.totalPricePaid = i.totalPricePaid
+        obj.createdAt = i.createdAt
+        obj.updatedAt = i.updatedAt
+        result.push(obj)
     }
 
     res.status(200).json({
-        succeded:true,
-        data:{
-            data,
-            message:"Başarılı şekilde listelendi"
+        succeded: true,
+        data: {
+            data: result,
+            message: "Başarılı şekilde listelendi"
         }
     })
 })
 //kullanıcının  satın aldıgı hisseleri getirir
-const getUserShares = tryCatch (async (req,res)=>{
+const getUserShares = tryCatch(async (req, res) => {
     const userId = req.user.id
     const data = await UserShares.findAll({
-        where:{
-            user_id:userId,
+        where: {
+            user_id: userId,
             quantity: {
                 [Sequelize.Op.gt]: 0, // Op.gt, "greater than" anlamına gelir
-              },
+            },
         },
         include: Shares,
     })
     if (!data) {
-        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.", 404)
     }
-
+    let result = []
+    for (const i of data) {
+        let obj = {}
+        obj.id = i.id
+        obj.shares_id = i.shares_id
+        obj.shares_name = i.share.name
+        obj.shares_description = i.share.description
+        obj.shares_price = i.share.price
+        obj.shares_totalSupply = i.share.totalSupply
+        obj.shares_availableShares = i.share.availableShares
+        obj.quantity = i.quantity
+        obj.createdAt = i.createdAt
+        obj.updatedAt = i.updatedAt
+        result.push(obj)
+    }
     res.status(200).json({
-        succeded:true,
-        data:{
-            data,
-            message:"Başarılı şekilde listelendi"
+        succeded: true,
+        data: {
+            data: result,
+            message: "Başarılı şekilde listelendi"
         }
     })
 })
 //Kullanıcının eklediği hisseleri getirir
-const getUserSharesAdded = tryCatch(async (req,res)=>{
+const getUserSharesAdded = tryCatch(async (req, res) => {
     const userId = req.user.id
     const data = await Shares.findAll({
-        where:{
-            user_id:userId,
+        where: {
+            user_id: userId,
         },
     })
     if (!data) {
-        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.", 404)
     }
 
     res.status(200).json({
-        succeded:true,
-        data:{
+        succeded: true,
+        data: {
             data,
-            message:"Başarılı şekilde listelendi"
+            message: "Başarılı şekilde listelendi"
         }
     })
 })
@@ -334,6 +365,26 @@ async function identityNumberVerification(tc, firstName, lastName, birthYear) {
         });
     });
 }
+
+const bulkUserCreateApi = tryCatch(async (req, res) => {
+    const {users} = req.body
+    for(const i of users){
+        const check = await identityNumberVerification(i.identityNumber,i.firstName,i.lastName,i.birthYear)
+        if (!check) {
+            return res.status(422).json({
+                succeded:false,
+                message:`${i.identityNumber} Tc Kimlik Nolu kişi Dogrulanamadı.`
+            })
+        }
+    }
+    const createUser = await User.bulkCreate(users)
+    res.status(200).json({
+        succeded:true,
+        data:{
+            data:createUser
+        }
+    })
+})
 const UserController = {
     userFindAll,
     userRegister,
@@ -344,7 +395,8 @@ const UserController = {
     getTradeHistory,
     getUserShares,
     userPasswordUpdate,
-    getUserSharesAdded
+    getUserSharesAdded,
+    bulkUserCreateApi
 }
 
 export default UserController
