@@ -256,7 +256,6 @@
           "Users"
         ],
         "summary": "kullanıcıyı veritabanından siler.",
-        
         "responses": {
           "200": {
             "description": "Successful response"
@@ -358,6 +357,68 @@
                   "password": {
                     "type": "string"
                   }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "phoneNumber",
+                  "identityNumber",
+                  "birthYear",
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Kullanıcı Başarılı Şekilde Kayıt oldu"
+          }
+        }
+      }
+    },
+    "/api/v1/users/bulk-register": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Kullanıcı Toplu Şekilde Kayıt İşlemi",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "users":{
+                    "type": "array",
+                    "items":{
+                      "type": "object",
+                      "properties": {
+                      
+                        "firstName": {
+                          "type": "string"
+                        },
+                        "lastName": {
+                          "type": "string"
+                        },
+                        "identityNumber": {
+                          "type": "string"
+                        },
+                        "birthYear": {
+                          "type": "number"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                  
                 },
                 "required": [
                   "firstName",
@@ -551,7 +612,6 @@
       }
     },
     "/api/v1/tradehistory/buy/{id}": {
-
       "post": {
         "tags": [
           "Tradehistory"
@@ -631,6 +691,65 @@
         "responses": {
           "200": {
             "description": "Hisse satım işlemi başarılı şekilde gerçekleşti"
+          }
+        }
+      }
+    },
+    "/api/v1/tradehistory/bulk": {
+      "post": {
+        "tags": [
+          "Tradehistory"
+        ],
+        "summary": "Toplu Hisse Alım-Satım İşlemi",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "users": {
+                    "type": "integer",
+                    "description": "Burası Array olacak"
+                  },
+                  "share": {
+                    "type": "object",
+                    "properties": {
+                      "buy": {
+                        "type": "object",
+                        "properties": {
+                          "quantity": {
+                            "type": "integer"
+                          },
+                          "shares_id": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "sell": {
+                        "type": "object",
+                        "properties": {
+                          "quantity": {
+                            "type": "integer"
+                          },
+                          "shares_id": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "users"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Toplu Hisse alım-satım işlemi başarılı şekilde gerçekleşti"
           }
         }
       }
