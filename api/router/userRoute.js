@@ -5,14 +5,17 @@ import Auth from "../middleware/userAuthMiddleware.js"
 
 const router = express.Router()
 
-
+router.route("/").delete(Auth.authenticateUserAPIToken,UserController.userDelete)
+router.route("/").put(Auth.authenticateUserAPIToken,UserValidate.userUpdateValidate,UserController.userUpdate)
+router.route("/reset-password").put(Auth.authenticateUserAPIToken,UserValidate.resetPasswordDataValidate,UserController.userPasswordUpdate)
 router.route("/trade-history").get(Auth.authenticateUserAPIToken,UserController.getTradeHistory)
 router.route("/user-shares").get(Auth.authenticateUserAPIToken,UserController.getUserShares)
+router.route("/shares-add").get(Auth.authenticateUserAPIToken,UserController.getUserSharesAdded)
 router.route("/").get(UserController.userFindAll)
 router.route("/register").post(UserValidate.userRegisterValidate,UserController.userRegister)
 router.route("/login").post(UserValidate.userLoginValidate,UserController.userLogin)
 router.route("/:id").get(UserController.bringAUser)
-router.route("/:id").delete(Auth.authenticateUserAPIToken,UserController.userDelete)
-router.route("/:id").put(Auth.authenticateUserAPIToken,UserController.userUpdate)
+
+
 
 export default router

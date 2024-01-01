@@ -3,8 +3,8 @@ import User from "../models/userModel.js";
 import AppError from "../utils/appError.js";
 const userRegisterValidate = [checkSchema({
     email: {
-        isEmail:{
-            errorMessage:"Lütfen geçerli bir e-posta giriniz."
+        isEmail: {
+            errorMessage: "Lütfen geçerli bir e-posta giriniz."
         },
         notEmpty: {
             errorMessage: "E-Posta boş geçilemez.",
@@ -13,7 +13,7 @@ const userRegisterValidate = [checkSchema({
             options: async (value) => {
                 const check = await User.findOne({
                     where: {
-                        email:value
+                        email: value
                     },
                 });
                 if (check) {
@@ -55,14 +55,14 @@ const userRegisterValidate = [checkSchema({
         },
         isString: { errorMessage: "Şifre string bir ifade olmalı" },
         isLength: {
-            options: { min: 11,max:11 },
+            options: { min: 11, max: 11 },
             errorMessage: "TC Kimlik No 11 karakter olmalı.",
         },
         custom: {
             options: async (value) => {
                 const check = await User.findOne({
                     where: {
-                        identityNumber:value
+                        identityNumber: value
                     },
                 });
                 if (check) {
@@ -101,8 +101,8 @@ const userRegisterValidate = [checkSchema({
 ];
 const userLoginValidate = [checkSchema({
     email: {
-        isEmail:{
-            errorMessage:"Lütfen geçerli bir e-posta giriniz."
+        isEmail: {
+            errorMessage: "Lütfen geçerli bir e-posta giriniz."
         },
         notEmpty: {
             errorMessage: "E-Posta boş geçilemez.",
@@ -140,9 +140,106 @@ const userLoginValidate = [checkSchema({
     }
 },
 ];
+const resetPasswordDataValidate = [checkSchema({
+    password: {
+        exists: {
+            errorMessage: "Lütfen Yeni Şifrenizi Giriniz"
+        },
+        isLength: {
+            options: {
+                min: 8
+            },
+            errorMessage: "Şifreniz en az 8 karakter içermelidir",
+        },
+    },
+    confirm_password: {
+        custom: {
+            options: (value, {
+                req
+            }) => {
+                if (String(value) !== String(req.body.password)) {
+                    return false
+                } else {
+                    return true
+                }
+            },
+            errorMessage: "Girmiş olduğunuz şifreler uyuşmamaktadır."
+        }
+
+    }
+}),
+
+(req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        const errorObject = {};
+        for (let i = 0; i < errors.errors.length; i++) {
+            const key = errors.errors[i].path;
+            const value = errors.errors[i].msg;
+            errorObject[key] = value;
+        }
+        return res.status(422).json({
+            succeded: false,
+            data: {
+                error: errorObject
+            }
+        });
+    }
+    else {
+        next();
+    }
+}
+]
+const userUpdateValidate = [checkSchema({
+    email: {
+        isEmail: {
+            errorMessage: "Lütfen geçerli bir e-posta giriniz."
+        },
+        notEmpty: {
+            errorMessage: "E-Posta boş geçilemez.",
+        },
+        custom: {
+            options: async (value, { req }) => {
+                const check = await User.findOne({
+                    where: {
+                        email: value
+                    },
+                });
+                if (check.id !== req.user.id) {
+                    return Promise.reject();
+                }
+            },
+            errorMessage: "Girmiş Oldugunuz E-mail Sisteme Kayıtlı",
+        },
+    },
+}),
+
+(req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        const errorObject = {};
+        for (let i = 0; i < errors.errors.length; i++) {
+            const key = errors.errors[i].path;
+            const value = errors.errors[i].msg;
+            errorObject[key] = value;
+        }
+        return res.status(422).json({
+            succeded: false,
+            data: {
+                error: errorObject
+            }
+        });
+    }
+    else {
+        next();
+    }
+}
+]
 const UserValidations = {
     userRegisterValidate,
-    userLoginValidate
+    userLoginValidate,
+    resetPasswordDataValidate,
+    userUpdateValidate
 };
 
 export default UserValidations;

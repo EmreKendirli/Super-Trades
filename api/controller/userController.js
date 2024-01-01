@@ -45,7 +45,7 @@ const bringAUser = tryCatch (async (req, res) => {
     })
 })
 const userDelete = tryCatch (async (req, res) => {
-    const userId = req.params.id
+    const userId = req.user.id
     const deletedUserCount = await User.destroy({
         where: {
             id: userId,
@@ -71,7 +71,7 @@ const userDelete = tryCatch (async (req, res) => {
     }
 })
 const userUpdate = tryCatch (async (req, res) => {
-    const userId = req.params.id
+    const userId = req.user.id
 
     const [updatedRowCount] = await User.update(req.body, {
         where: {
@@ -185,7 +185,46 @@ const userLogin = tryCatch (async (req, res) => {
     }
     
 });
+const userPasswordUpdate = tryCatch(async(req,res)=>{
+    const id = req.user.id
+    const user = await User.findOne({
+        where:{
+            id:id
+        }
+    });
+    let same = false
+    same = await bcrypt.compare(req.body.currentpassword, user.password);
+    if (same) {
+        const newPassword = await hashpassword(req.body.password)
+        const [updatedRowCount] = await User.update({
+            password: newPassword
+        }, {
+            where: {
+                id: id,
+            },
+        });
 
+        res.status(200).json({
+            succeded: true,
+            data:{
+                message: 'Şifreniz başarılı bir şekilde değiştirildi.'
+            }
+        })
+    } else {
+
+        res.status(422).json({
+            succeded: false,
+            data:{
+                message: 'Mevcut şifrenizi kontrol ediniz'
+            }
+        })
+    }
+})
+async function hashpassword(password) {
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt)
+    return hashedPassword
+}
 //kullanıcının alım satım geçmişi getirilir
 const getTradeHistory = tryCatch(async (req,res)=>{
     const userId = req.user.id
@@ -207,7 +246,7 @@ const getTradeHistory = tryCatch(async (req,res)=>{
         }
     })
 })
-//kullanıcının elindeki hisseleri getirir
+//kullanıcının  satın aldıgı hisseleri getirir
 const getUserShares = tryCatch (async (req,res)=>{
     const userId = req.user.id
     const data = await UserShares.findAll({
@@ -218,6 +257,26 @@ const getUserShares = tryCatch (async (req,res)=>{
               },
         },
         include: Shares,
+    })
+    if (!data) {
+        throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
+    }
+
+    res.status(200).json({
+        succeded:true,
+        data:{
+            data,
+            message:"Başarılı şekilde listelendi"
+        }
+    })
+})
+//Kullanıcının eklediği hisseleri getirir
+const getUserSharesAdded = tryCatch(async (req,res)=>{
+    const userId = req.user.id
+    const data = await Shares.findAll({
+        where:{
+            user_id:userId,
+        },
     })
     if (!data) {
         throw new AppError("İşlem Sırasında Hata ile karşılaşıldı. Lütfen daha sonra tekrar deneyiniz.",404) 
@@ -283,7 +342,9 @@ const UserController = {
     userDelete,
     userUpdate,
     getTradeHistory,
-    getUserShares
+    getUserShares,
+    userPasswordUpdate,
+    getUserSharesAdded
 }
 
 export default UserController

@@ -194,7 +194,44 @@
         "tags": [
           "Users"
         ],
-        "summary": "Giriş Yapmış Kullanıcının Elindeki Hisseleri Getirir",
+        "summary": "Giriş Yapmış Kullanıcının Satın Aldıgı Hisseleri Getirir",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/v1/users/shares-add": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Giriş Yapmış Kullanıcının Sisteme Kayıt Ettiği Hisseleri Getirir",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "İstenilen Kullanıcı id'si",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "İstenilen id deki Kullanıcı bilgilerini verir",
         "responses": {
           "200": {
             "description": "Successful response"
@@ -211,6 +248,81 @@
         "responses": {
           "200": {
             "description": "Successful response"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "kullanıcıyı veritabanından siler.",
+        
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Kullanıcı Bilgilerini Güncelle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Super Admin Başarılı Şekilde Güncellendi"
+          }
+        }
+      }
+    },
+    "/api/v1/users/reset-password": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Kullanıcı Şifre Güncelleme.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "currentpassword": {
+                    "type": "string",
+                    "description": "Güncel Şifre"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Yeni Şifre"
+                  },
+                  "confirm_password": {
+                    "type": "string",
+                    "description": "Şifreyi Tekrar Giriniz"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Kullanıcı Başarılı Şekilde Güncellendi"
           }
         }
       }
@@ -302,179 +414,6 @@
         }
       }
     },
-    "/api/v1/users/{id}": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "İstenilen Kullanıcı id'si",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "summary": "İstenilen id deki Kullanıcı bilgilerini verir",
-        "responses": {
-          "200": {
-            "description": "Successful response"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Gönderilen id'deki kullanıcıyı veritabanından siler.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Silinecek kullanıcı id'si",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Users"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Güncellenecek kullanıcının id'si",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "summary": "Kullanıcı Bilgilerini Güncelle",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Super Admin Başarılı Şekilde Güncellendi"
-          }
-        }
-      }
-    },
-    "/api/v1/user/reset-password": {
-      "put": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Kullanıcı Şifre Güncelleme.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "currentpassword": {
-                    "type": "string",
-                    "description": "Güncel Şifre"
-                  },
-                  "newpassword": {
-                    "type": "string",
-                    "description": "Yeni Şifre"
-                  },
-                  "confirm_password": {
-                    "type": "string",
-                    "description": "Şifreyi Tekrar Giriniz"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Kullanıcı Başarılı Şekilde Güncellendi"
-          }
-        }
-      }
-    },
-    "/api/v1/shares": {
-      "get": {
-        "tags": [
-          "Shares"
-        ],
-        "summary": "Kayıtlı Tüm Hisse bilgilerini verir",
-        "responses": {
-          "200": {
-            "description": "Successful response"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Shares"
-        ],
-        "summary": "Sisteme Hisse Kayıt Edilir",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "price": {
-                    "type": "number"
-                  },
-                  "totalSupply": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "name",
-                  "email",
-                  "password"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Super Admin Başarılı Şekilde Kayıt oldu"
-          }
-        }
-      }
-    },
     "/api/v1/shares/{id}": {
       "get": {
         "tags": [
@@ -554,6 +493,59 @@
         "responses": {
           "200": {
             "description": "Hisse Fiyatı Başarılı Şekilde Güncellendi"
+          }
+        }
+      }
+    },
+    "/api/v1/shares": {
+      "get": {
+        "tags": [
+          "Shares"
+        ],
+        "summary": "Kayıtlı Tüm Hisse bilgilerini verir",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Shares"
+        ],
+        "summary": "Sisteme Hisse Kayıt Edilir",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "totalSupply": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Super Admin Başarılı Şekilde Kayıt oldu"
           }
         }
       }
