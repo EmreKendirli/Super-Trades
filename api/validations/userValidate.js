@@ -82,19 +82,18 @@ const userRegisterValidate = [checkSchema({
     const errors = validationResult(req);
     console.log(errors);
     if (!errors.isEmpty()) {
-        const msg = [];
+        const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {
-            msg.push({
-                "path":errors.errors[i].path,
-                "message":errors.errors[i].msg
-            });
+            const key = errors.errors[i].path;
+            const value = errors.errors[i].msg;
+            errorObject[key] = value;
         }
         return res.status(422).json({
-          succeded:false,
-          data:{
-            error:msg
-          }
-        })
+            succeded: false,
+            data: {
+                error: errorObject
+            }
+        });
     } else {
         next();
     }
@@ -124,19 +123,18 @@ const userLoginValidate = [checkSchema({
     const errors = validationResult(req);
     console.log(errors);
     if (!errors.isEmpty()) {
-        const msg = [];
+        const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {
-            msg.push({
-                "path":errors.errors[i].path,
-                "message":errors.errors[i].msg
-            });
+            const key = errors.errors[i].path;
+            const value = errors.errors[i].msg;
+            errorObject[key] = value;
         }
         return res.status(422).json({
             succeded: false,
-            data:{
-                error:msg
-              }
-        })
+            data: {
+                error: errorObject
+            }
+        });
     } else {
         next();
     }

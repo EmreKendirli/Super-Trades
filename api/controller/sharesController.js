@@ -6,7 +6,6 @@ const addShares = tryCatch(async (req, res) => {
     let { name, description, price, totalSupply } = req.body
     name = name.toUpperCase()
     const numericPrice = price.toFixed(2);
-    console.log(numericPrice);
     const data = await Shares.create({ name, description, price: numericPrice,  totalSupply, availableShares: totalSupply })
 
     res.status(200).json({

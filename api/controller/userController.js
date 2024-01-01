@@ -176,8 +176,8 @@ const userLogin = tryCatch (async (req, res) => {
             },
         });
     } else {
-        res.status(200).json({
-            succeded: true,
+        res.status(422).json({
+            succeded: false,
             data: {
                 message: "Şifreniz yanlış",
             },

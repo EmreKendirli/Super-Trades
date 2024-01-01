@@ -10,7 +10,7 @@ const sharesValidate = [checkSchema({
             options: async (value) => {
                 const check = await Shares.findOne({
                     where: {
-                        name:value.toUpperCase()
+                        name: value.toUpperCase()
                     },
                 });
                 if (check) {
@@ -18,6 +18,10 @@ const sharesValidate = [checkSchema({
                 }
             },
             errorMessage: "Girmiş Oldugunuz İsim Sisteme Kayıtlı",
+        },
+        isLength: {
+            options: { min: 3, max: 3 },
+            errorMessage: "Girmiş Oldugunuz isim 3 karakter olmalıdır.",
         },
     },
     description: {
@@ -32,8 +36,8 @@ const sharesValidate = [checkSchema({
         notEmpty: {
             errorMessage: "Fiyat boş geçilemez.",
         },
-        isNumeric:{
-            errorMessage:"Number ifade olmalı"
+        isNumeric: {
+            errorMessage: "Number ifade olmalı"
         },
         custom: {
             options: async (value) => {
@@ -51,7 +55,7 @@ const sharesValidate = [checkSchema({
         },
         custom: {
             options: async (value) => {
-                
+
                 if (value <= 0) {
                     return Promise.reject();
                 }
@@ -64,19 +68,18 @@ const sharesValidate = [checkSchema({
     const errors = validationResult(req);
     console.log(errors);
     if (!errors.isEmpty()) {
-        const msg = [];
+        const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {
-            msg.push({
-                "path":errors.errors[i].path,
-                "message":errors.errors[i].msg
-            });
+            const key = errors.errors[i].path;
+            const value = errors.errors[i].msg;
+            errorObject[key] = value;
         }
         return res.status(422).json({
-          succeded:false,
-          data:{
-            error:msg
-          }
-        })
+            succeded: false,
+            data: {
+                error: errorObject
+            }
+        });
     } else {
         next();
     }
@@ -87,12 +90,12 @@ const sharesUpdateValidate = [checkSchema({
         notEmpty: {
             errorMessage: "Fiyat boş geçilemez.",
         },
-        isNumeric:{
-            errorMessage:"Number ifade olmalı"
+        isNumeric: {
+            errorMessage: "Number ifade olmalı"
         },
         custom: {
             options: async (value) => {
-                console.log( value);
+                console.log(value);
                 if (parseFloat(value) <= 0) {
                     return Promise.reject();
                 }
@@ -105,19 +108,18 @@ const sharesUpdateValidate = [checkSchema({
     const errors = validationResult(req);
     console.log(errors);
     if (!errors.isEmpty()) {
-        const msg = [];
+        const errorObject = {};
         for (let i = 0; i < errors.errors.length; i++) {
-            msg.push({
-                "path":errors.errors[i].path,
-                "message":errors.errors[i].msg
-            });
+            const key = errors.errors[i].path;
+            const value = errors.errors[i].msg;
+            errorObject[key] = value;
         }
         return res.status(422).json({
-          succeded:false,
-          data:{
-            error:msg
-          }
-        })
+            succeded: false,
+            data: {
+                error: errorObject
+            }
+        });
     } else {
         next();
     }

@@ -12,7 +12,7 @@ router.route("/").get(UserController.userFindAll)
 router.route("/register").post(UserValidate.userRegisterValidate,UserController.userRegister)
 router.route("/login").post(UserValidate.userLoginValidate,UserController.userLogin)
 router.route("/:id").get(UserController.bringAUser)
-router.route("/:id").delete(UserController.userDelete)
-router.route("/:id").put(UserController.userUpdate)
+router.route("/:id").delete(Auth.authenticateUserAPIToken,UserController.userDelete)
+router.route("/:id").put(Auth.authenticateUserAPIToken,UserController.userUpdate)
 
 export default router
