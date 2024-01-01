@@ -231,8 +231,6 @@ const getUserShares = tryCatch (async (req,res)=>{
         }
     })
 })
-
-
 const createToken = async (id) => {
     return jwt.sign(
         {
@@ -244,6 +242,7 @@ const createToken = async (id) => {
         }
     );
 };
+//TC Kimlik No Kontrol
 async function identityNumberVerification(tc, firstName, lastName, birthYear) {
     let data = `<?xml version="1.0" encoding="utf-8"?>\r\n<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">\r\n  <soap12:Body>\r\n    <TCKimlikNoDogrula xmlns="http://tckimlik.nvi.gov.tr/WS">\r\n      <TCKimlikNo>${tc}</TCKimlikNo>\r\n      <Ad>${firstName}</Ad>\r\n      <Soyad>${lastName}</Soyad>\r\n      <DogumYili>${birthYear}</DogumYili>\r\n    </TCKimlikNoDogrula>\r\n  </soap12:Body>\r\n</soap12:Envelope>`;
 
