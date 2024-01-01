@@ -16,7 +16,6 @@ const UserShares = db.define('user_shares', {
   shares_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-
   },
   quantity: {
     type: DataTypes.INTEGER,

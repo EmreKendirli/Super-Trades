@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import { promisify } from "util";
 import jwt from "jsonwebtoken";
-
+import Shares from "../models/sharesModel.js"
 const authenticateUserAPIToken = async (req, res, next) => {
     try {
         let token;
@@ -11,7 +11,6 @@ const authenticateUserAPIToken = async (req, res, next) => {
         ) {
             token = req.headers["authorization"].split(" ")[1];
         }
-        console.log(token);
         if (!token) {
             return res.status(401).json({
                 succeded: false,
@@ -20,13 +19,11 @@ const authenticateUserAPIToken = async (req, res, next) => {
         }
 
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-        console.log(decoded);
         const currentUser = await User.findOne({
             where: {
                 id: decoded.id,
             }
         });
-        console.log(currentUser);
         if (!currentUser) {
             return res.status(401).json({
                 succeded: false,
@@ -44,9 +41,40 @@ const authenticateUserAPIToken = async (req, res, next) => {
         });
     }
 };
-
+const isSharesOwnerMiddleware = async (req, res, next) => {
+    try {
+        const userId = req.user.id
+        const shareId = Number(req.params.id);
+        const isUserOwner = await Shares.findOne({
+            where: {
+                user_id: userId,
+                id: shareId,
+            },
+        });
+        console.log("cvava",isUserOwner);
+        if (!isUserOwner) {
+            return res.status(422).json({
+                succedd: false,
+                data: {
+                    message: 'Bu hisseye erişim izniniz yok.'
+                }
+            });
+        }
+        next()
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            succedd: false,
+            data:{
+                error,
+                message: 'Middleware hatası.'
+            }
+        });
+    }
+}
 
 const authMiddleware = {
     authenticateUserAPIToken,
+    isSharesOwnerMiddleware
 }
 export default authMiddleware

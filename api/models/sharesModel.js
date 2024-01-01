@@ -1,8 +1,17 @@
 import TradeHistory from './tradeHistoryModel.js';
+import Users from "./userModel.js"
 
 import { Sequelize, DataTypes } from 'sequelize';
 import db from '../config/database.js';
 const Shares = db.define('shares', {
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Users,
+      key: 'id',
+    },
+  },
   name: {
     type: DataTypes.STRING(3), // 3 büyük harfle sembol
   },
@@ -22,5 +31,6 @@ const Shares = db.define('shares', {
 });
 
 
+Shares.User = Shares.belongsTo(Users, { foreignKey: 'user_id' });
 
 export default Shares;

@@ -176,7 +176,6 @@
         }
       }
     },
-
     "/api/v1/users/trade-history": {
       "get": {
         "tags": [
